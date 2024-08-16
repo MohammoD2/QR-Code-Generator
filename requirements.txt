@@ -1,4 +1,4 @@
-Pillow==9.5.0
+Pillow
 qrcode[pil]
 streamlit
 zlib 
