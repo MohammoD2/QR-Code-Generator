@@ -96,22 +96,30 @@ def main():
             align-items: center;
         }
 
+        /* New and improved download button styles */
         .download-btn {
             display: block;
-            width: 200px;
+            width: 220px;
             margin: 20px auto;
-            padding: 10px;
-            background-color: #3f51b5;
+            padding: 12px;
+            background-image: linear-gradient(to right, #4caf50, #66bb6a);
             color: white;
-            font-size: 16px;
+            font-size: 18px;
             border: none;
-            border-radius: 8px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .download-btn:hover {
-            background-color: #303f9f;
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-btn:focus {
+            outline: none;
         }
 
         </style>
@@ -147,7 +155,8 @@ def main():
                     data=img_bytes,
                     file_name="qrcode.png",
                     mime="image/png",
-                    key="download_btn"
+                    key="download_btn",
+                    use_container_width=False
                 )
                 st.markdown('</div>', unsafe_allow_html=True)
             else:
@@ -156,3 +165,4 @@ def main():
 # Run the Streamlit app
 if __name__ == "__main__":
     main()
+
