@@ -26,117 +26,131 @@ def main():
         initial_sidebar_state="expanded"
     )
 
-    st.markdown("""
+    # Custom CSS for styling
+    st.markdown(
+        """
         <style>
-            .main-container {
-                border: 2px solid #4CAF50;
-                border-radius: 10px;
-                padding: 20px;
-                background-color: #f9f9f9;
-                max-width: 800px;
-                margin: auto;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-            .title {
-                text-align: center;
-                color: #4CAF50;
-                font-size: 2.5em;
-                margin-bottom: 20px;
-            }
-            .description {
-                text-align: center;
-                font-size: 1.2em;
-                margin-bottom: 30px;
-            }
-            .input-container {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-            .button-container {
-                text-align: center;
-                margin-top: 20px;
-            }
-            .qr-container {
-                text-align: center;
-                margin-top: 30px;
-                padding: 20px;
-                border: 1px solid #ddd;
-                border-radius: 10px;
-                background-color: #fff;
-            }
-            .download-btn {
-                margin-top: 15px;
-                background-color: #4CAF50;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 1em;
-                text-decoration: none;
-                display: inline-block;
-            }
-            .download-btn:hover {
-                background-color: #45a049;
-            }
-        </style>
-    """, unsafe_allow_html=True)
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 36px;
+            color: #3f51b5;
+            margin-top: 50px;
+            font-weight: bold;
+        }
 
-    st.markdown("<div class='main-container'>", unsafe_allow_html=True)
-    st.markdown("<h1 class='title'>🔗 QR Code Generator</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='description'>Easily generate a QR code for any URL. Enter the URL below, and get a downloadable QR code image.</p>", unsafe_allow_html=True)
+        .description {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .input-field {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        .input-field:focus {
+            border-color: #3f51b5;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .download-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #3f51b5;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #303f9f;
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Title and description
+    st.markdown('<div class="title">🔗 QR Code Generator</div>', unsafe_allow_html=True)
+    st.markdown('<div class="description">Easily generate a QR code for any URL. Enter the URL below, and get a downloadable QR code image.</div>', unsafe_allow_html=True)
 
     # URL input field
-    url_input = st.text_input("Enter the URL", placeholder="https://example.com", key="url_input")
+    with st.container():
+        st.markdown('<div class="input-container">', unsafe_allow_html=True)
+        url_input = st.text_input("Enter the URL", placeholder="https://example.com", key="url_input", label_visibility="collapsed")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # Generate button
-    st.markdown("<div class='button-container'>", unsafe_allow_html=True)
-    if st.button("Generate QR Code"):
-        if url_input:
-            img = generate_qr_code(url_input)
-            
-            # Convert Pillow Image to bytes
-            buffered = BytesIO()
-            img.save(buffered, format="PNG")  # Save image as PNG format
-            img_bytes = buffered.getvalue()
-            
-            # Display the generated QR code
-            st.markdown("<div class='qr-container'>", unsafe_allow_html=True)
-            st.image(img_bytes, caption="Your QR Code", use_column_width=True)
-            st.markdown("</div>", unsafe_allow_html=True)
-            
-            # Download button
-            st.markdown(
+        # Generate button
+        if st.button("Generate QR Code", key="generate_btn", help="Click to generate your QR code"):
+            if url_input:
+                img = generate_qr_code(url_input)
+                
+                # Convert Pillow Image to bytes
+                buffered = BytesIO()
+                img.save(buffered, format="PNG")  # Save image as PNG format
+                img_bytes = buffered.getvalue()
+                
+                # Display the generated QR code
+                st.markdown('<div class="qr-container">', unsafe_allow_html=True)
+                st.image(img_bytes, caption="Your QR Code", use_column_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Download button
+                st.markdown('<button class="download-btn">Download QR Code</button>', unsafe_allow_html=True)
                 st.download_button(
                     label="Download QR Code",
                     data=img_bytes,
                     file_name="qrcode.png",
                     mime="image/png",
-                    key='download-btn',
-                    button_text="Download QR Code",
-                    style="""
-                        .download-btn {
-                            margin-top: 15px;
-                            background-color: #4CAF50;
-                            color: white;
-                            padding: 10px 20px;
-                            border: none;
-                            border-radius: 5px;
-                            cursor: pointer;
-                            font-size: 1em;
-                            text-decoration: none;
-                            display: inline-block;
-                        }
-                        .download-btn:hover {
-                            background-color: #45a049;
-                        }
-                    """
+                    key="download_btn"
                 )
-            )
-        else:
-            st.warning("Please enter a valid URL.")
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+            else:
+                st.warning("Please enter a valid URL.")
 
+# Run the Streamlit app
 if __name__ == "__main__":
     main()
