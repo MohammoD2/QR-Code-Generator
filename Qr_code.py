@@ -89,6 +89,11 @@ def main():
         .qr-container {
             text-align: center;
             margin-top: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
         .download-btn {
@@ -134,13 +139,9 @@ def main():
                 img.save(buffered, format="PNG")  # Save image as PNG format
                 img_bytes = buffered.getvalue()
                 
-                # Display the generated QR code
+                # Display the generated QR code and download button inside a container
                 st.markdown('<div class="qr-container">', unsafe_allow_html=True)
-                st.image(img_bytes, caption="Your QR Code", use_column_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-                # Download button
-                st.markdown('<button class="download-btn">Download QR Code</button>', unsafe_allow_html=True)
+                st.image(img_bytes, caption="Your QR Code", use_column_width=False)  # Set width to medium size
                 st.download_button(
                     label="Download QR Code",
                     data=img_bytes,
@@ -148,6 +149,7 @@ def main():
                     mime="image/png",
                     key="download_btn"
                 )
+                st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.warning("Please enter a valid URL.")
 
